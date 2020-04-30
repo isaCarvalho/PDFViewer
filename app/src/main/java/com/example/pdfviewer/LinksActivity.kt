@@ -56,6 +56,8 @@ class LinksActivity : AppCompatActivity() {
 
                         viewAdapter = LinkAdapter(DatabaseController(this).list())
                         recyclerView.adapter = viewAdapter
+
+                        findViewById<TextView>(R.id.saveLink).text = null
                     }
                 } catch (e : Exception) {
                     Log.e("ERROR", e.message!!)
