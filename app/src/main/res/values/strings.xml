@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PDFViewer</string>
+
+    <string name="from_device">Armazenamento Interno</string>
+    <string name="from_internet">Buscar da Internet</string>
+    <string name="paste_link">Cole o link do PDF aqui</string>
+</resources>
