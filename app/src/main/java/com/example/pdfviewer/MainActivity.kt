@@ -44,7 +44,9 @@ class MainActivity : AppCompatActivity() {
             val link = findViewById<EditText>(R.id.link).text.toString()
             if (link.isEmpty())
             {
-                Toast.makeText(this, "Por favor, cole um link!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@MainActivity, LinksActivity::class.java)
+
+                startActivity(intent)
             }
             else
             {
