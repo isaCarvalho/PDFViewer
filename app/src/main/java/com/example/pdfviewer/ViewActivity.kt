@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -21,9 +23,10 @@ class ViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view)
 
+        val pdfView = findViewById<com.github.barteksc.pdfviewer.PDFView>(R.id.pdf_view)
+
         if (intent != null) {
             val viewType = intent.getStringExtra("ViewType")
-            val pdfView = findViewById<com.github.barteksc.pdfviewer.PDFView>(R.id.pdf_view)
 
             if (!TextUtils.isEmpty(viewType) || viewType != null)
             {
@@ -133,6 +136,30 @@ class ViewActivity : AppCompatActivity() {
                 }
 
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.pages_menu, menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val pdfView = findViewById<com.github.barteksc.pdfviewer.PDFView>(R.id.pdf_view)
+
+        return when (item.itemId) {
+            R.id.nextMenu -> {
+                pdfView.jumpTo(pdfView.currentPage + 1)
+                true
+            }
+
+            R.id.previousMenu -> {
+                pdfView.jumpTo(pdfView.currentPage - 1)
+                true
+            }
+
+            else -> true
         }
     }
 }

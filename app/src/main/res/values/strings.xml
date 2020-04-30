@@ -6,4 +6,7 @@
     <string name="paste_link">Cole o link do PDF aqui</string>
     <string name="search_item">Buscar</string>
     <string name="delete">Deletar</string>
+
+    <string name="next">Próxima</string>
+    <string name="previous">Anterior</string>
 </resources>
