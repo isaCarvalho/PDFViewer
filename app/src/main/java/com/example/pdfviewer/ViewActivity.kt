@@ -11,13 +11,15 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
+import com.example.pdfviewer.fragment.PageDialogFragment
 import com.krishna.fileloader.FileLoader
 import com.krishna.fileloader.listener.FileRequestListener
 import com.krishna.fileloader.pojo.FileResponse
 import com.krishna.fileloader.request.FileLoadRequest
 import java.io.File
 
-class ViewActivity : AppCompatActivity() {
+class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,6 +141,14 @@ class ViewActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment, nPage : Int) {
+        val pdfView = findViewById<com.github.barteksc.pdfviewer.PDFView>(R.id.pdf_view)
+        pdfView.jumpTo(nPage)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.pages_menu, menu)
 
@@ -156,6 +166,12 @@ class ViewActivity : AppCompatActivity() {
 
             R.id.previousMenu -> {
                 pdfView.jumpTo(pdfView.currentPage - 1)
+                true
+            }
+
+            R.id.goTo -> {
+                val dialog = PageDialogFragment()
+                dialog.show(supportFragmentManager, "PageDialogFragment")
                 true
             }
 

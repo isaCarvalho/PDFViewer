@@ -4,12 +4,15 @@
 
     <item
         android:id="@+id/previousMenu"
-        android:icon="@android:drawable/ic_media_previous"
+        android:icon="@mipmap/ic_next_background"
         android:title="@string/previous"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/nextMenu"
-        android:icon="@android:drawable/ic_media_next"
+        android:icon="@mipmap/ic_previous_background"
         android:title="@string/next"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/goTo"
+        android:title="@string/goToPage" />
 </menu>
