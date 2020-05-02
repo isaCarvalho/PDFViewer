@@ -15,4 +15,7 @@
     <string name="cancel">Cancelar</string>
 
     <string name="save">Salvar Link</string>
+
+    <string name="exportData">Exportar</string>
+    <string name="importData">Importar</string>
 </resources>

@@ -8,4 +8,12 @@
         android:title="@string/search_item"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/exportMenu"
+        android:icon="@android:drawable/stat_sys_download"
+        android:title="@string/exportData" />
+    <item
+        android:id="@+id/importMenu"
+        android:icon="@android:drawable/stat_sys_upload"
+        android:title="@string/importData" />
 </menu>
