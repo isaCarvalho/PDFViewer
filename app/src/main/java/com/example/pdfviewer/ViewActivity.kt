@@ -8,7 +8,6 @@ import android.speech.tts.TextToSpeech
 import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -22,12 +21,12 @@ import com.krishna.fileloader.listener.FileRequestListener
 import com.krishna.fileloader.pojo.FileResponse
 import com.krishna.fileloader.request.FileLoadRequest
 import java.io.File
-import java.util.*
+import android.view.MenuItem
 
 class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener {
 
-    lateinit var mTextToSpeech: TextToSpeech
     lateinit var pdfView : PDFView
+
     var input = ""
     var fileUri: String? = null
 
@@ -153,11 +152,6 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
 
             }
         }
-
-        mTextToSpeech = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
-            if (status != TextToSpeech.ERROR)
-                mTextToSpeech.language = Locale.UK
-        })
     }
 
     override fun onDialogNegativeClick(dialogFragment: DialogFragment) {
@@ -197,6 +191,33 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
 
             else -> true
         }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+
+        if (hasFocus)
+            hideSystemUI()
+        else {
+            showSystemUI()
+        }
+    }
+
+    private fun hideSystemUI()
+    {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE or
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_FULLSCREEN)
+    }
+
+    private fun showSystemUI()
+    {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     }
 
     fun nextPage(v : MenuItem) {

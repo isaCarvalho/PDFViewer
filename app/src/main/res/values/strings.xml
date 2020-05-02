@@ -10,6 +10,7 @@
     <string name="next">Próxima</string>
     <string name="previous">Anterior</string>
     <string name="goToPage">Ir para página</string>
+    <string name="fullScreen">Tela cheia</string>
 
     <string name="ok">Ir</string>
     <string name="cancel">Cancelar</string>
