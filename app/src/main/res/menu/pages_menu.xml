@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/speakMenu"
-        android:icon="@android:drawable/ic_lock_silent_mode_off"
-        android:onClick="speak"
-        android:title="@string/play" />
-    <item
-        android:id="@+id/stopMenu"
-        android:icon="@android:drawable/ic_lock_silent_mode"
-        android:onClick="stop"
-        android:title="@string/stop" />
     <item
         android:id="@+id/previousMenu"
         android:icon="@mipmap/ic_next_background"

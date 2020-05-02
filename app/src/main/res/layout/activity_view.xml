@@ -31,6 +31,8 @@
         android:id="@+id/bottomRead"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fadeScrollbars="true"
+        android:fadingEdge="vertical"
         app:itemBackground="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

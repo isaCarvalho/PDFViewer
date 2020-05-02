@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.example.pdfviewer.database.DatabaseController
 import com.example.pdfviewer.fragment.PageDialogFragment
 import com.github.barteksc.pdfviewer.PDFView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -27,15 +28,20 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
 
     lateinit var mTextToSpeech: TextToSpeech
     lateinit var pdfView : PDFView
+    var input = ""
+    var fileUri: String? = null
 
+    @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view)
 
         pdfView = findViewById(R.id.pdf_view)
 
-        if (intent != null) {
+        if (intent != null)
+        {
             val viewType = intent.getStringExtra("ViewType")
+            fileUri = null
 
             if (!TextUtils.isEmpty(viewType) || viewType != null)
             {
@@ -76,6 +82,7 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
                     progressBar.visibility = View.VISIBLE
 
                     val url = intent.getStringExtra("url")
+                    fileUri = url
 
                     try {
                         FileLoader.with(this)
@@ -158,7 +165,7 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
 
     override fun onDialogPositiveClick(dialogFragment: DialogFragment, nPage : Int) {
         val pdfView = findViewById<PDFView>(R.id.pdf_view)
-        pdfView.jumpTo(nPage)
+        pdfView.jumpTo(nPage, true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -168,36 +175,40 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
         bottomNavigationView.menu.clear()
         bottomNavigationView.inflateMenu(R.menu.pages_menu)
 
+        menuInflater.inflate(R.menu.save_menu, menu)
+
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId)
+        {
+            R.id.saveMenu -> {
+                if (!fileUri.isNullOrEmpty()) {
+                    DatabaseController(this@ViewActivity).insert(fileUri!!)
+
+                    Toast.makeText(this, "Link salvo", Toast.LENGTH_SHORT).show()
+                }
+                else
+                    Toast.makeText(this, "Não há link para salvar", Toast.LENGTH_SHORT).show()
+
+                true
+            }
+
+            else -> true
+        }
+    }
+
     fun nextPage(v : MenuItem) {
-        pdfView.jumpTo(pdfView.currentPage + 1)
+        pdfView.jumpTo(pdfView.currentPage + 1, true)
     }
 
     fun previousPage(v : MenuItem) {
-        pdfView.jumpTo(pdfView.currentPage - 1)
+        pdfView.jumpTo(pdfView.currentPage - 1, true)
     }
 
     fun showDialog(v : MenuItem) {
         val dialog = PageDialogFragment()
         dialog.show(supportFragmentManager, "PageDialogFragment")
-    }
-
-   fun speak(v : MenuItem) {
-
-        val string = "Hi! This is just a test"
-
-        if (string.isNullOrEmpty())
-            Toast.makeText(this, "Não há texto", Toast.LENGTH_SHORT).show()
-        else
-            mTextToSpeech.speak(string, TextToSpeech.QUEUE_FLUSH, null)
-    }
-
-    fun stop(v : MenuItem) {
-        if (mTextToSpeech.isSpeaking)
-            mTextToSpeech.stop()
-        else
-            Toast.makeText(this, "Não está lendo", Toast.LENGTH_SHORT).show()
     }
 }
