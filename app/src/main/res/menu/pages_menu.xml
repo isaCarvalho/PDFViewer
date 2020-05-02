@@ -3,16 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/speakMenu"
+        android:icon="@android:drawable/ic_lock_silent_mode_off"
+        android:onClick="speak"
+        android:title="@string/play" />
+    <item
+        android:id="@+id/stopMenu"
+        android:icon="@android:drawable/ic_lock_silent_mode"
+        android:onClick="stop"
+        android:title="@string/stop" />
+    <item
         android:id="@+id/previousMenu"
         android:icon="@mipmap/ic_next_background"
+        android:onClick="previousPage"
         android:title="@string/previous"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/nextMenu"
         android:icon="@mipmap/ic_previous_background"
+        android:onClick="nextPage"
         android:title="@string/next"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/goTo"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:onClick="showDialog"
         android:title="@string/goToPage" />
 </menu>

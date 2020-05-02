@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
@@ -13,19 +14,25 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.pdfviewer.fragment.PageDialogFragment
+import com.github.barteksc.pdfviewer.PDFView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.krishna.fileloader.FileLoader
 import com.krishna.fileloader.listener.FileRequestListener
 import com.krishna.fileloader.pojo.FileResponse
 import com.krishna.fileloader.request.FileLoadRequest
 import java.io.File
+import java.util.*
 
 class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener {
+
+    lateinit var mTextToSpeech: TextToSpeech
+    lateinit var pdfView : PDFView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view)
 
-        val pdfView = findViewById<com.github.barteksc.pdfviewer.PDFView>(R.id.pdf_view)
+        pdfView = findViewById(R.id.pdf_view)
 
         if (intent != null) {
             val viewType = intent.getStringExtra("ViewType")
@@ -139,43 +146,58 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
 
             }
         }
+
+        mTextToSpeech = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
+            if (status != TextToSpeech.ERROR)
+                mTextToSpeech.language = Locale.UK
+        })
     }
 
-    override fun onDialogNegativeClick(dialog: DialogFragment) {
+    override fun onDialogNegativeClick(dialogFragment: DialogFragment) {
     }
 
-    override fun onDialogPositiveClick(dialog: DialogFragment, nPage : Int) {
-        val pdfView = findViewById<com.github.barteksc.pdfviewer.PDFView>(R.id.pdf_view)
+    override fun onDialogPositiveClick(dialogFragment: DialogFragment, nPage : Int) {
+        val pdfView = findViewById<PDFView>(R.id.pdf_view)
         pdfView.jumpTo(nPage)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.pages_menu, menu)
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomRead)
+
+        bottomNavigationView.menu.clear()
+        bottomNavigationView.inflateMenu(R.menu.pages_menu)
 
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val pdfView = findViewById<com.github.barteksc.pdfviewer.PDFView>(R.id.pdf_view)
+    fun nextPage(v : MenuItem) {
+        pdfView.jumpTo(pdfView.currentPage + 1)
+    }
 
-        return when (item.itemId) {
-            R.id.nextMenu -> {
-                pdfView.jumpTo(pdfView.currentPage + 1)
-                true
-            }
+    fun previousPage(v : MenuItem) {
+        pdfView.jumpTo(pdfView.currentPage - 1)
+    }
 
-            R.id.previousMenu -> {
-                pdfView.jumpTo(pdfView.currentPage - 1)
-                true
-            }
+    fun showDialog(v : MenuItem) {
+        val dialog = PageDialogFragment()
+        dialog.show(supportFragmentManager, "PageDialogFragment")
+    }
 
-            R.id.goTo -> {
-                val dialog = PageDialogFragment()
-                dialog.show(supportFragmentManager, "PageDialogFragment")
-                true
-            }
+   fun speak(v : MenuItem) {
 
-            else -> true
-        }
+        val string = "Hi! This is just a test"
+
+        if (string.isNullOrEmpty())
+            Toast.makeText(this, "Não há texto", Toast.LENGTH_SHORT).show()
+        else
+            mTextToSpeech.speak(string, TextToSpeech.QUEUE_FLUSH, null)
+    }
+
+    fun stop(v : MenuItem) {
+        if (mTextToSpeech.isSpeaking)
+            mTextToSpeech.stop()
+        else
+            Toast.makeText(this, "Não está lendo", Toast.LENGTH_SHORT).show()
     }
 }

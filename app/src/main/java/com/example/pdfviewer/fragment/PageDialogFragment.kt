@@ -39,7 +39,7 @@ class PageDialogFragment : DialogFragment()
 
             builder.setTitle(R.string.goToPage)
                 .setView(mView)
-                .setIcon(R.mipmap.ic_search_foreground)
+                .setIcon(R.drawable.ic_search_black_24dp)
                 .setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, which ->
                     val nPage = mView.findViewById<EditText>(R.id.goToPageTxt).text.toString().toInt()
 

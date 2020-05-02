@@ -9,12 +9,12 @@
         android:id="@+id/goToPageTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autofillHints="@string/goToPage"
         android:ems="10"
         android:inputType="number"
+        android:labelFor="@id/goToPageTxt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="@string/goToPage"
-        android:labelFor="@id/goToPageTxt"/>
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

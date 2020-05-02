@@ -13,4 +13,7 @@
 
     <string name="ok">Ir</string>
     <string name="cancel">Cancelar</string>
+
+    <string name="play">Falar</string>
+    <string name="stop">Parar</string>
 </resources>
