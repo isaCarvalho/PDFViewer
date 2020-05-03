@@ -20,9 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
-import java.io.PrintWriter
 import java.lang.Exception
-import java.lang.StringBuilder
 
 class LinksActivity : AppCompatActivity() {
 
@@ -30,7 +28,7 @@ class LinksActivity : AppCompatActivity() {
         const val READ_FILE = 1000
     }
 
-    var viewManager : LinearLayoutManager? = null
+    private lateinit var viewManager : LinearLayoutManager
     private lateinit var viewAdapter : LinkAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabSave : FloatingActionButton
@@ -53,7 +51,7 @@ class LinksActivity : AppCompatActivity() {
             adapter = viewAdapter
         }
 
-        fabSave = findViewById<FloatingActionButton>(R.id.saveFab)
+        fabSave = findViewById(R.id.saveFab)
 
         fabSave.setOnClickListener {
             val url = findViewById<TextView>(R.id.saveLink).text.toString()
@@ -118,7 +116,7 @@ class LinksActivity : AppCompatActivity() {
                 else
                 {
                     var success = true
-                    val path = applicationContext.filesDir
+                    val path = baseContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
 
                     val pdfViewerDirectory = File(path, "PDFViewer")
                     if (!pdfViewerDirectory.exists())
@@ -130,6 +128,7 @@ class LinksActivity : AppCompatActivity() {
                         if (!file.exists())
                             success = file.createNewFile()
 
+                        Log.e("PATH", file.absolutePath)
                         if (success)
                             file.appendText(string).also {
                                 Toast.makeText(this, "Links exportados para o armazenamento interno", Toast.LENGTH_SHORT).show()
@@ -160,7 +159,6 @@ class LinksActivity : AppCompatActivity() {
 
         if (requestCode == READ_FILE && resultCode == Activity.RESULT_OK) {
             data!!.data.also { uri ->
-                val stringBuilder = StringBuilder()
 
                 contentResolver.openInputStream(uri!!).use { inputStream ->
                     BufferedReader(InputStreamReader(inputStream!!)).use { reader ->

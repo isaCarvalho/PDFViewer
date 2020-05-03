@@ -26,8 +26,7 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
 
     private lateinit var pdfView : PDFView
     private lateinit var bottomNavigationView : BottomNavigationView
-
-    var fileUri: String? = null
+    private var fileUri: String? = null
 
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,32 +49,7 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
                 {
                     val selectedPdf = Uri.parse(intent.getStringExtra("FileUri"))
 
-                    pdfView.fromUri(selectedPdf)
-                        .password(null)
-                        .defaultPage(0)
-                        .enableSwipe(true)
-                        .swipeHorizontal(false)
-                        .enableDoubletap(true)
-                        .onDraw { canvas, pageWidth, pageHeight, displayedPage ->
-                            Log.d("onDraw", "$canvas $pageHeight $pageWidth $displayedPage")
-                        }.onDrawAll { canvas, pageWidth, pageHeight, displayedPage ->
-                            Log.d("onDrawAll", "$canvas $pageHeight $pageWidth $displayedPage")
-                        }
-                        .onPageChange{ page, pageCount ->
-                            Log.d("onPageChange", "$page $pageCount")
-                        }
-                        .onPageError {page, t->
-                            Toast.makeText(this@ViewActivity, "Error while opening page $page", Toast.LENGTH_SHORT).show()
-                            Log.d("ERROR", "" + t.localizedMessage)
-                        }
-                        .onTap{ false }
-                        .onRender { nbPages, pageWidth, pageHeight ->
-                            Log.d("onRender", "$nbPages $pageWidth $pageHeight")
-                            pdfView.fitToWidth()
-                        }
-                        .enableAnnotationRendering(true)
-                        .invalidPageColor(Color.RED)
-                        .load()
+                    getConfiguration(pdfView, pdfView.fromUri(selectedPdf))
                 }
                 else if (viewType == "internet")
                 {
@@ -90,66 +64,62 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
                                 override fun onLoad(p0: FileLoadRequest?, p1: FileResponse<File>?) {
 
                                     val pdfFile = p1!!.body
-
-                                    pdfView.fromFile(pdfFile)
-                                        .password(null)
-                                        .defaultPage(0)
-                                        .enableSwipe(true)
-                                        .swipeHorizontal(false)
-                                        .enableDoubletap(true)
-                                        .onDraw { canvas, pageWidth, pageHeight, displayedPage ->
-                                            Log.d(
-                                                "onDraw",
-                                                "$canvas $pageHeight $pageWidth $displayedPage"
-                                            )
-                                        }
-                                        .onDrawAll { canvas, pageWidth, pageHeight, displayedPage ->
-                                            Log.d(
-                                                "onDrawAll",
-                                                "$canvas $pageHeight $pageWidth $displayedPage"
-                                            )
-                                        }
-                                        .onPageChange { page, pageCount ->
-                                            Log.d("onPageChange", "$page $pageCount")
-                                        }
-                                        .onPageError { page, t ->
-                                            Toast.makeText(
-                                                this@ViewActivity,
-                                                "Error while opening page $page",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            Log.d("ERROR", "" + t.localizedMessage)
-                                        }
-                                        .onTap { false }
-                                        .onRender { nbPages, pageWidth, pageHeight ->
-                                            Log.d("onRender", "$nbPages $pageWidth $pageHeight")
-                                            pdfView.fitToWidth()
-                                        }
-                                        .enableAnnotationRendering(true)
-                                        .invalidPageColor(Color.RED)
-                                        .load()
+                                    getConfiguration(pdfView, pdfView.fromFile(pdfFile))
                                 }
 
                                 override fun onError(p0: FileLoadRequest?, p1: Throwable) {
-                                    Toast.makeText(
-                                        this@ViewActivity,
-                                        "" + p1.message,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    Toast.makeText(this@ViewActivity, p1.message, Toast.LENGTH_SHORT).show()
                                 }
                             })
                     } catch (e: Exception) {
-                        Toast.makeText(
-                            this@ViewActivity,
-                            "" + e.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 progressBar.visibility = View.GONE
             }
         }
+    }
+
+    private fun getConfiguration(pdfView : PDFView, pdfViewConfigurator: PDFView.Configurator)
+    {
+        pdfViewConfigurator.
+            password(null)
+            .defaultPage(0)
+            .enableSwipe(true)
+            .swipeHorizontal(true)
+            .enableDoubletap(true)
+            .onDraw { canvas, pageWidth, pageHeight, displayedPage ->
+                Log.d(
+                    "onDraw",
+                    "$canvas $pageHeight $pageWidth $displayedPage"
+                )
+            }
+            .onDrawAll { canvas, pageWidth, pageHeight, displayedPage ->
+                Log.d(
+                    "onDrawAll",
+                    "$canvas $pageHeight $pageWidth $displayedPage"
+                )
+            }
+            .onPageChange { page, pageCount ->
+                Log.d("onPageChange", "$page $pageCount")
+            }
+            .onPageError { page, t ->
+                Toast.makeText(
+                    this@ViewActivity,
+                    "Error while opening page $page",
+                    Toast.LENGTH_SHORT
+                ).show()
+                Log.d("ERROR", "" + t.localizedMessage)
+            }
+            .onTap { false }
+            .onRender { nbPages, pageWidth, pageHeight ->
+                Log.d("onRender", "$nbPages $pageWidth $pageHeight")
+                pdfView.fitToWidth()
+            }
+            .enableAnnotationRendering(true)
+            .invalidPageColor(Color.RED)
+            .load()
     }
 
     override fun onDialogNegativeClick(dialogFragment: DialogFragment) {
@@ -194,14 +164,10 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
 
-        if (hasFocus) {
-            bottomNavigationView.visibility = View.GONE
+        if (hasFocus)
             hideSystemUI()
-        }
-        else {
-            bottomNavigationView.visibility = View.VISIBLE
+        else
             showSystemUI()
-        }
     }
 
     private fun hideSystemUI()
