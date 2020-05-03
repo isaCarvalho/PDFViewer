@@ -86,7 +86,7 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
         pdfViewConfigurator.
             password(null)
             .defaultPage(0)
-            .enableSwipe(true)
+            .enableSwipe(false)
             .swipeHorizontal(true)
             .enableDoubletap(true)
             .onDraw { canvas, pageWidth, pageHeight, displayedPage ->
