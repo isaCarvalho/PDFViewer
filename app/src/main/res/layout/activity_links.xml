@@ -44,9 +44,11 @@
         android:backgroundTint="#AF0000"
         android:clickable="false"
         android:tint="@android:color/white"
+        app:backgroundTint="#AF0000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="32dp"
         app:rippleColor="#AF0000"
-        app:srcCompat="@android:drawable/ic_menu_save" />
+        app:srcCompat="@mipmap/ic_save_background" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

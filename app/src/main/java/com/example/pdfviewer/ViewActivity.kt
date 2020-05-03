@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
 import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
@@ -25,9 +24,9 @@ import android.view.MenuItem
 
 class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener {
 
-    lateinit var pdfView : PDFView
+    private lateinit var pdfView : PDFView
+    private lateinit var bottomNavigationView : BottomNavigationView
 
-    var input = ""
     var fileUri: String? = null
 
     @ExperimentalStdlibApi
@@ -36,6 +35,9 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
         setContentView(R.layout.activity_view)
 
         pdfView = findViewById(R.id.pdf_view)
+
+        val progressBar = findViewById<ProgressBar>(R.id.progress_bar)
+        progressBar.visibility = View.VISIBLE
 
         if (intent != null)
         {
@@ -77,9 +79,6 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
                 }
                 else if (viewType == "internet")
                 {
-                    val progressBar = findViewById<ProgressBar>(R.id.progress_bar)
-                    progressBar.visibility = View.VISIBLE
-
                     val url = intent.getStringExtra("url")
                     fileUri = url
 
@@ -145,11 +144,10 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
                             "" + e.message,
                             Toast.LENGTH_SHORT
                         ).show()
-                    } finally {
-                        progressBar.visibility = View.GONE
                     }
                 }
 
+                progressBar.visibility = View.GONE
             }
         }
     }
@@ -164,7 +162,7 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomRead)
+        bottomNavigationView = findViewById(R.id.bottomRead)
 
         bottomNavigationView.menu.clear()
         bottomNavigationView.inflateMenu(R.menu.pages_menu)
@@ -196,9 +194,12 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
 
-        if (hasFocus)
+        if (hasFocus) {
+            bottomNavigationView.visibility = View.GONE
             hideSystemUI()
+        }
         else {
+            bottomNavigationView.visibility = View.VISIBLE
             showSystemUI()
         }
     }

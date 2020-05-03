@@ -15,7 +15,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/goTo"
-        android:icon="@android:drawable/ic_menu_set_as"
+        android:icon="@mipmap/ic_nextpage_background"
         android:onClick="showDialog"
         android:title="@string/goToPage" />
 </menu>
