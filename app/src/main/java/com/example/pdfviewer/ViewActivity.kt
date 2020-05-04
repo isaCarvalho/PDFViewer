@@ -1,5 +1,6 @@
 package com.example.pdfviewer
 
+import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,7 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
 
     private lateinit var pdfView : PDFView
     private lateinit var bottomNavigationView : BottomNavigationView
+    private lateinit var documentUri: Uri
     private var fileUri: String? = null
 
     @ExperimentalStdlibApi
@@ -48,6 +50,7 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
                 if (viewType!! == "storage")
                 {
                     val selectedPdf = Uri.parse(intent.getStringExtra("FileUri"))
+                    documentUri = selectedPdf
 
                     getConfiguration(pdfView, pdfView.fromUri(selectedPdf))
                 }
@@ -64,6 +67,8 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
                                 override fun onLoad(p0: FileLoadRequest?, p1: FileResponse<File>?) {
 
                                     val pdfFile = p1!!.body
+                                    documentUri = Uri.parse(pdfFile.absolutePath)
+
                                     getConfiguration(pdfView, pdfView.fromFile(pdfFile))
                                 }
 
@@ -86,8 +91,8 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
         pdfViewConfigurator.
             password(null)
             .defaultPage(0)
-            .enableSwipe(false)
-            .swipeHorizontal(true)
+            .enableSwipe(true)
+            .swipeHorizontal(false)
             .enableDoubletap(true)
             .onDraw { canvas, pageWidth, pageHeight, displayedPage ->
                 Log.d(
@@ -153,6 +158,19 @@ class ViewActivity : AppCompatActivity() , PageDialogFragment.PageDialogListener
                 }
                 else
                     Toast.makeText(this, "Não há link para salvar", Toast.LENGTH_SHORT).show()
+
+                true
+            }
+
+            R.id.shareMenu -> {
+
+                val sendIntent : Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_STREAM, documentUri)
+                    type = "application/pdf"
+                }
+
+                startActivity(Intent.createChooser(sendIntent, resources.getText(R.string.share)))
 
                 true
             }

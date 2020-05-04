@@ -19,4 +19,6 @@
 
     <string name="exportData">Exportar</string>
     <string name="importData">Importar</string>
+
+    <string name="share">Compartilhar</string>
 </resources>
